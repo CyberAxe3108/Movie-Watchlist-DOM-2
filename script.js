@@ -89,4 +89,34 @@ function createMovieCard(title, genre) {
   newLi.appendChild(actionsDiv);
 
   return newLi;
+
+  
 }
+movieList.addEventListener("click", (event) => {
+
+  if(event.target.tagName !== "BUTTON") return;
+
+  const card = event.target.closest("li")
+  if(event.target.classList.contains("remove-btn")) card.remove()
+    updateCount();
+    applyFilter(currentFilter);
+  if (event.target.classList.contains("watch-btn")) {
+    card.classList.toggle("watched");
+    if(card.classList.contains("watched")){
+        event.target.textContext("Unmark Watched")
+    }else {
+      event.target.textContent = "Mark Watched";
+    }
+    applyFilter(currentFilter);
+  }
+
+
+})
+
+// Why do we attach the listener to #movie-list instead of to each button?
+// Answer:Because the buttons don't exist when the page first loads, they are
+// created dynamically when a user submits a movie.
+//
+// What does event.target.closest("li") do?
+// Answer: event.target is the button that was clicked. closest("li") walks UP
+// the DOM tree from that button, looking for the nearest parent <li> element.
