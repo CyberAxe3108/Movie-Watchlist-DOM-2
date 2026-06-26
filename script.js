@@ -38,3 +38,13 @@ titleInput.value
 // What is the difference between getAttribute("value") and .value on an input?
 // getAttribute("value") → This reads what was written in the HTML file
 // .value               →  This reads what the user typed at the moment.
+
+movieForm.addEventListener("submit", (e) => {
+    e.preventDefault()
+    titleInput.value
+    genreInput.value
+    console.log(titleInput.value)
+    console.log(genreInput.value)
+    movieForm.reset()
+
+})
