@@ -41,10 +41,52 @@ titleInput.value
 
 movieForm.addEventListener("submit", (e) => {
     e.preventDefault()
-    titleInput.value
-    genreInput.value
-    console.log(titleInput.value)
-    console.log(genreInput.value)
+    const title = titleInput.value
+    const genre = genreInput.value
+    console.log(title.value)
+    console.log(genre.value)
+    const Card = createMovieCard(title,genre)
+    movieList.appendChild(Card)
+    // updateCount()
     movieForm.reset()
 
 })
+
+function createMovieCard(title, genre) {
+    const newLi = document.createElement("li")
+    newLi.classList.add("movie-card")
+    newLi.setAttribute("data-genre", genre)
+
+    const infoDiv = document.createElement("div")
+    infoDiv.classList.add("movie-info")
+
+    const titleSpan = document.createElement("span")
+    titleSpan.classList.add("movie-title");
+    titleSpan.textContent = title;
+
+    const genreSpan = document.createElement("span");
+    genreSpan.classList.add("movie-genre");
+    genreSpan.textContent = genre || "no genre";
+
+    infoDiv.appendChild(titleSpan);
+    infoDiv.appendChild(genreSpan);
+
+    const actionsDiv = document.createElement("div");
+  actionsDiv.classList.add("movie-actions");
+
+  const watchBtn = document.createElement("button");
+  watchBtn.classList.add("watch-btn");
+  watchBtn.textContent = "Mark Watched";
+
+  const removeBtn = document.createElement("button");
+  removeBtn.classList.add("remove-btn");
+  removeBtn.textContent = "Remove";
+
+  actionsDiv.appendChild(watchBtn);
+  actionsDiv.appendChild(removeBtn);
+
+  newLi.appendChild(infoDiv);
+  newLi.appendChild(actionsDiv);
+
+  return newLi;
+}
