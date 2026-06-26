@@ -6,6 +6,8 @@ const genreInput = document.getElementById("genre-input")
 const movieList = document.getElementById("movie-list")
 const clearWatchedBtn = document.getElementById("clear-watched-btn")
 
+let currentFilter = "all"
+
 const filterBtns = document.querySelectorAll(".filter-btn")
 console.log(movieForm);
 console.log(titleInput);
@@ -47,7 +49,7 @@ movieForm.addEventListener("submit", (e) => {
     console.log(genre.value)
     const Card = createMovieCard(title,genre)
     movieList.appendChild(Card)
-    // updateCount()
+    updateCount()
     movieForm.reset()
 
 })
@@ -71,7 +73,7 @@ function createMovieCard(title, genre) {
     infoDiv.appendChild(titleSpan);
     infoDiv.appendChild(genreSpan);
 
-    const actionsDiv = document.createElement("div");
+  const actionsDiv = document.createElement("div");
   actionsDiv.classList.add("movie-actions");
 
   const watchBtn = document.createElement("button");
@@ -100,6 +102,7 @@ movieList.addEventListener("click", (event) => {
   if(event.target.classList.contains("remove-btn")) card.remove()
     updateCount();
     applyFilter(currentFilter);
+
   if (event.target.classList.contains("watch-btn")) {
     card.classList.toggle("watched");
     if(card.classList.contains("watched")){
@@ -113,6 +116,7 @@ movieList.addEventListener("click", (event) => {
 
 })
 
+
 // Why do we attach the listener to #movie-list instead of to each button?
 // Answer:Because the buttons don't exist when the page first loads, they are
 // created dynamically when a user submits a movie.
@@ -120,3 +124,67 @@ movieList.addEventListener("click", (event) => {
 // What does event.target.closest("li") do?
 // Answer: event.target is the button that was clicked. closest("li") walks UP
 // the DOM tree from that button, looking for the nearest parent <li> element.
+
+function updateCount(){
+    const total = movieList.querySelectorAll(".movie-card").length
+    movieCount.textContent = total + " movies"
+}
+
+function updateFilterButtons(activeFilter) {
+  filterBtns.forEach((btn) => {
+    btn.classList.remove("active-filter");
+    if (btn.id === "filter-" + activeFilter) {
+      btn.classList.add("active-filter");
+    }
+  });
+}
+
+
+function applyFilter(filter) {
+  // 1. update current filter
+  currentFilter = filter;
+
+  // 2. update which button looks active
+  updateFilterButtons(filter);
+
+  // 3. get all cards
+  const cards = movieList.querySelectorAll(".movie-card");
+
+  // 4. show or hide each card
+  cards.forEach((card) => {
+    if (filter === "all") {
+      card.classList.remove("filtered-out");
+    } else if (filter === "watched") {
+      if (card.classList.contains("watched")) {
+        card.classList.remove("filtered-out");
+      } else {
+        card.classList.add("filtered-out");
+      }
+    } else if (filter === "unwatched") {
+      if (!card.classList.contains("watched")) {
+        card.classList.remove("filtered-out");
+      } else {
+        card.classList.add("filtered-out");
+      }
+    }
+  });
+}
+
+// wire up filter buttons
+filterBtns.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const filter = btn.id.replace("filter-", "");
+    applyFilter(filter);
+  });
+});
+
+clearWatchedBtn.addEventListener("click", () => {
+  const watchedCards = movieList.querySelectorAll(".watched");
+  
+  watchedCards.forEach((card) => {
+    card.remove();
+  });
+
+  updateCount();
+  applyFilter(currentFilter);
+});
